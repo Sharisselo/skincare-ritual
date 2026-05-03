@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>My Skincare Ritual</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --blush:#f2e0d8; --rose:#c9837a; --rose2:#b86860;
+  --deep:#3a2428; --gold:#c9a96e; --gold2:#b8904a;
+  --cream:#fdf7f3; --soft:#fef4ef;
+  --mint:#a8dfc8; --mint2:#72c7a8;
+  --lavender:#d4c0e8; --lavender2:#b89ed0;
+  --sky:#b8d8f0; --sky2:#7ab0d8;
+  --night:#fdf0f8; --night-card:#fff0fa;
+  --night-accent:#c87ab0; --night-border:rgba(200,122,176,0.25);
+  --text:#3a2428; --text2:#7a5a5e; --text3:#c8a8a8;
+  --border:rgba(201,131,122,0.15); --border2:rgba(201,131,122,0.3);
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* HEADER */
+.header{background:linear-gradient(160deg,#f9ede8 0%,#f0d9d0 50%,#e8cfc4 100%);padding:44px 20px 28px;text-align:center;position:relative;overflow:hidden;}
+.header::before{content:'';position:absolute;top:-60px;right:-60px;width:200px;height:200px;background:radial-gradient(circle,rgba(201,131,122,0.15) 0%,transparent 70%);border-radius:50%;}
+.header-label{font-family:'DM Sans',sans-serif;font-size:10px;font-weight:500;letter-spacing:3px;text-transform:uppercase;color:var(--rose);margin-bottom:8px;}
+.header h1{font-family:'Cormorant Garamond',serif;font-size:36px;font-weight:300;color:var(--deep);line-height:1.1;margin-bottom:10px;}
+.header h1 em{font-style:italic;color:var(--rose);}
+.skin-concerns{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;}
+.concern-tag{background:rgba(255,255,255,0.6);border:1px solid rgba(201,131,122,0.3);color:var(--rose);font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:20px;}
+
+/* TAB NAV */
+.tab-nav{display:flex;background:#fff;border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none;box-shadow:0 2px 10px rgba(58,36,40,0.06);}
+.tab-nav::-webkit-scrollbar{display:none;}
+.tab-btn{flex:1;min-width:55px;padding:12px 6px;border:none;background:transparent;font-family:'DM Sans',sans-serif;font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text3);cursor:pointer;transition:all 0.3s;white-space:nowrap;position:relative;}
+.tab-btn.active{color:var(--rose);}
+.tab-btn.active::after{content:'';position:absolute;bottom:0;left:15%;right:15%;height:2px;background:var(--rose);border-radius:2px 2px 0 0;}
+.tab-icon{display:block;font-size:15px;margin-bottom:2px;}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+/* SECTION */
+.section{padding:14px;}
+.section-title{font-family:'Cormorant Garamond',serif;font-size:22px;font-weight:400;color:var(--deep);margin-bottom:3px;}
+.section-sub{font-size:11px;color:var(--text2);margin-bottom:14px;}
+
+/* DAY SELECTOR */
+.day-selector{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:0 0 10px;margin-bottom:4px;}
+.day-selector::-webkit-scrollbar{display:none;}
+.day-pill{flex-shrink:0;padding:7px 14px;border-radius:20px;border:1px solid var(--border2);background:#fff;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;transition:all 0.25s;}
+.day-pill.active{background:linear-gradient(135deg,var(--rose),var(--rose2));border-color:var(--rose2);color:#fff;box-shadow:0 3px 10px rgba(201,131,122,0.35);}
+.day-pill.done-am::after{content:' ☀️';font-size:9px;}
+.day-pill.done-pm::after{content:' 🌙';font-size:9px;}
+.day-pill.done-both{background:linear-gradient(135deg,var(--mint2),var(--mint));border-color:var(--mint2);color:#fff;}
+.day-pill.done-both::after{content:' ✓';font-size:10px;}
+
+/* ROUTINE CARD */
+.routine-card{background:#fff;border:1px solid var(--border2);border-radius:16px;margin-bottom:10px;overflow:hidden;box-shadow:0 2px 10px rgba(58,36,40,0.05);}
+.routine-card.night-mode{background:var(--night-card);border-color:var(--night-border);}
+.routine-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;border-bottom:0;}
+.routine-header.open{border-bottom:1px solid var(--border);}
+.routine-header.open.night-border{border-bottom-color:var(--night-border);}
+.step-num{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blush),#e8c4ba);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;color:var(--rose);flex-shrink:0;}
+.night-mode .step-num{background:linear-gradient(135deg,rgba(200,122,176,0.2),rgba(200,122,176,0.35));color:var(--night-accent);}
+.step-title{flex:1;font-size:13px;font-weight:500;color:var(--deep);}
+.night-mode .step-title{color:#4a2840;}
+.step-expand{font-size:17px;color:var(--text3);transition:transform 0.3s;}
+.routine-card.open .step-expand{transform:rotate(180deg);}
+.routine-body{display:none;padding:10px 14px 14px;}
+.routine-card.open .routine-body{display:block;}
+
+/* PRODUCT OPTION */
+.product-option{display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.product-option:last-child{border-bottom:none;}
+.prod-check{width:20px;height:20px;border-radius:50%;border:2px solid var(--border2);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;transition:all 0.25s;flex-shrink:0;margin-top:1px;}
+.prod-check.checked{background:linear-gradient(135deg,var(--rose),var(--rose2));border-color:var(--rose2);color:#fff;}
+.night-mode .prod-check.checked{background:linear-gradient(135deg,var(--night-accent),#a058a0);border-color:#a058a0;}
+.prod-info{flex:1;}
+.prod-name{font-size:12px;color:var(--deep);line-height:1.4;}
+.night-mode .prod-name{color:#4a2840;}
+.prod-note{font-size:10px;color:var(--rose);font-style:italic;margin-top:1px;}
+.night-mode .prod-note{color:var(--night-accent);}
+.rotate-label{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);margin:8px 0 5px;}
+
+/* DONE BUTTON */
+.done-btn-wrap{padding:12px 14px 14px;border-top:1px solid var(--border);}
+.done-btn{width:100%;padding:11px;border-radius:12px;border:none;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all 0.25s;letter-spacing:0.5px;}
+.done-btn.am-btn{background:linear-gradient(135deg,#fde8dc,#f8d0c0);color:var(--rose2);}
+.done-btn.am-btn.marked{background:linear-gradient(135deg,var(--mint),var(--mint2));color:#fff;}
+.done-btn.pm-btn{background:linear-gradient(135deg,rgba(200,122,176,0.15),rgba(200,122,176,0.25));color:var(--night-accent);}
+.done-btn.pm-btn.marked{background:linear-gradient(135deg,var(--mint),var(--mint2));color:#fff;}
+
+/* WARNING BOX */
+.warn-box{background:linear-gradient(135deg,#fff8f0,#ffeedd);border:1px solid rgba(201,169,110,0.3);border-radius:10px;padding:10px 12px;margin:8px 0;font-size:11px;color:#7a5a30;line-height:1.6;}
+.warn-box strong{color:#c9702a;}
+
+/* WEEKLY TABLE */
+.week-table{width:100%;border-collapse:collapse;margin-bottom:14px;}
+.week-table th{font-size:9px;font-weight:500;letter-spacing:1.5px;text-transform:uppercase;color:var(--rose);padding:7px 8px;text-align:left;border-bottom:1px solid var(--border2);}
+.week-table td{padding:9px 8px;font-size:11px;color:var(--text);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.4;}
+.week-table tr:last-child td{border-bottom:none;}
+.day-badge{display:inline-block;background:linear-gradient(135deg,var(--blush),#e8c4ba);color:var(--rose);font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;white-space:nowrap;}
+.active-badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:10px;font-weight:500;}
+.bha{background:#e8f4e8;color:#3a7a3a;}
+.retinol{background:#f0e8f8;color:#7a3a9a;}
+.aha{background:#e8f0f8;color:#3a6a9a;}
+.retinal{background:#f8e8f0;color:#9a3a6a;}
+.azelaic{background:#f8f0e8;color:#9a6a3a;}
+.rest{background:#f0f8e8;color:#5a7a3a;}
+.hydration{background:#e8f8f8;color:#3a7a7a;}
+
+/* MASK CARD */
+.mask-card{background:#fff;border-radius:13px;padding:13px 14px;margin-bottom:8px;border:1px solid var(--border2);box-shadow:0 2px 8px rgba(58,36,40,0.04);display:flex;gap:10px;align-items:flex-start;}
+.mask-emoji{font-size:22px;flex-shrink:0;}
+.mask-name{font-size:12px;font-weight:500;color:var(--deep);margin-bottom:2px;}
+.mask-when{font-size:10px;color:var(--rose);margin-bottom:2px;}
+.mask-purpose{font-size:11px;color:var(--text2);line-height:1.4;}
+
+/* TIP CARD */
+.tip-card{background:#fff;border-radius:13px;padding:13px 14px;margin-bottom:8px;border-left:3px solid var(--rose);box-shadow:0 2px 8px rgba(58,36,40,0.04);}
+.tip-title{font-size:12px;font-weight:600;color:var(--deep);margin-bottom:3px;}
+.tip-text{font-size:11px;color:var(--text2);line-height:1.6;}
+
+/* TRACKER / OVERVIEW */
+.week-nav{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.week-nav-btn{background:#fff;border:1px solid var(--border2);color:var(--text2);width:30px;height:30px;border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;}
+.week-nav-btn:hover{border-color:var(--rose);color:var(--rose);}
+.week-label{font-family:'Cormorant Garamond',serif;font-size:16px;color:var(--deep);flex:1;text-align:center;}
+
+.tracker-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:14px;}
+.tracker-day-col{text-align:center;}
+.tracker-day-name{font-size:9px;font-weight:500;letter-spacing:1px;text-transform:uppercase;color:var(--text3);margin-bottom:6px;}
+.tracker-day-date{font-size:10px;color:var(--text2);margin-bottom:6px;}
+.tracker-circle{width:32px;height:32px;border-radius:50%;border:2px solid var(--border2);background:#fff;margin:0 auto 4px;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all 0.25s;cursor:pointer;}
+.tracker-circle.am-done{background:linear-gradient(135deg,#fde8dc,#f8d0c0);border-color:var(--rose);color:var(--rose);}
+.tracker-circle.pm-done{background:linear-gradient(135deg,rgba(200,122,176,0.2),rgba(200,122,176,0.35));border-color:var(--night-accent);color:var(--night-accent);}
+.tracker-circle.both-done{background:linear-gradient(135deg,var(--mint),var(--mint2));border-color:var(--mint2);color:#fff;}
+.tracker-label{font-size:8px;color:var(--text3);text-align:center;}
+
+.streak-card{background:linear-gradient(135deg,#fdeee6,#fde6f0);border:1px solid rgba(201,131,122,0.25);border-radius:16px;padding:16px;margin-bottom:14px;text-align:center;}
+.streak-num{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:300;color:var(--rose);line-height:1;}
+.streak-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-top:4px;}
+.streak-sub{font-size:11px;color:var(--text3);margin-top:6px;}
+
+.monthly-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:14px;}
+.month-day-cell{aspect-ratio:1;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500;background:rgba(200,170,155,0.08);color:var(--text3);cursor:pointer;transition:all 0.2s;}
+.month-day-cell.has-date{color:var(--text2);}
+.month-day-cell.am-only{background:rgba(249,160,140,0.2);color:var(--rose);}
+.month-day-cell.pm-only{background:rgba(200,122,176,0.15);color:var(--night-accent);}
+.month-day-cell.full-done{background:linear-gradient(135deg,var(--mint),var(--mint2));color:#fff;}
+.month-day-cell.today{box-shadow:0 0 0 2px var(--rose);}
+.month-header{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;margin-bottom:4px;}
+.month-day-header{text-align:center;font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);padding:4px 0;}
+
+.stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.stat-card{background:#fff;border:1px solid var(--border2);border-radius:14px;padding:14px;text-align:center;}
+.stat-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:300;color:var(--rose);}
+.stat-label{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text3);margin-top:3px;}
+
+/* FOOTER */
+.footer{text-align:center;padding:18px 18px 48px;font-size:10px;color:var(--text3);letter-spacing:1px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-label">Personalized Skincare</div>
+  <h1>My Skin<br><em>Ritual</em></h1>
+  <div class="skin-concerns">
+    <span class="concern-tag">Combination</span>
+    <span class="concern-tag">Visible Pores</span>
+    <span class="concern-tag">Fine Lines</span>
+    <span class="concern-tag">11 Line</span>
+    <span class="concern-tag">Dark Spots</span>
+    <span class="concern-tag">Uneven Tone</span>
+  </div>
+</div>
+
+<div class="tab-nav">
+  <button class="tab-btn active" onclick="showTab('morning',this)"><span class="tab-icon">☀️</span>Morning</button>
+  <button class="tab-btn" onclick="showTab('evening',this)"><span class="tab-icon">🌙</span>Evening</button>
+  <button class="tab-btn" onclick="showTab('tracker',this)"><span class="tab-icon">✅</span>Tracker</button>
+  <button class="tab-btn" onclick="showTab('overview',this)"><span class="tab-icon">📊</span>Overview</button>
+  <button class="tab-btn" onclick="showTab('weekly',this)"><span class="tab-icon">📅</span>Weekly</button>
+  <button class="tab-btn" onclick="showTab('tips',this)"><span class="tab-icon">💡</span>Tips</button>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ MORNING TAB -->
+<div id="tab-morning" class="tab-content active">
+  <div class="section">
+    <div class="section-title">Morning Routine</div>
+    <div class="section-sub">Select a day to see your personalized steps</div>
+    <div class="day-selector" id="am-day-selector"></div>
+    <div id="am-routine-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ EVENING TAB -->
+<div id="tab-evening" class="tab-content">
+  <div class="section">
+    <div class="section-title">Evening Routine</div>
+    <div class="section-sub">Select a day to see your personalized steps</div>
+    <div class="day-selector" id="pm-day-selector"></div>
+    <div id="pm-routine-content"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ TRACKER TAB -->
+<div id="tab-tracker" class="tab-content">
+  <div class="section">
+    <div class="section-title">Weekly Tracker</div>
+    <div class="section-sub">Mark your routines done — never skip a day!</div>
+    <div class="week-nav">
+      <button class="week-nav-btn" onclick="changeWeek(-1)">‹</button>
+      <span class="week-label" id="weekLabel">—</span>
+      <button class="week-nav-btn" onclick="changeWeek(1)">›</button>
+    </div>
+    <div class="tracker-grid" id="trackerGrid"></div>
+    <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+      <span style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,#fde8dc,#f8d0c0);border:1.5px solid var(--rose);display:inline-block;"></span>AM done</span>
+      <span style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;border-radius:50%;background:rgba(200,122,176,0.2);border:1.5px solid var(--night-accent);display:inline-block;"></span>PM done</span>
+      <span style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:5px;"><span style="width:14px;height:14px;border-radius:50%;background:linear-gradient(135deg,var(--mint),var(--mint2));display:inline-block;"></span>Both done ✨</span>
+    </div>
+    <div class="streak-card">
+      <div class="streak-num" id="streakNum">0</div>
+      <div class="streak-label">Day Streak 🔥</div>
+      <div class="streak-sub" id="streakSub">Complete both AM & PM to build your streak</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ OVERVIEW TAB -->
+<div id="tab-overview" class="tab-content">
+  <div class="section">
+    <div class="section-title">Monthly Overview</div>
+    <div class="section-sub" id="monthOverviewLabel">—</div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-num" id="statFullDays">0</div><div class="stat-label">Full Days ✨</div></div>
+      <div class="stat-card"><div class="stat-num" id="statAmDays">0</div><div class="stat-label">AM Only ☀️</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPmDays">0</div><div class="stat-label">PM Only 🌙</div></div>
+      <div class="stat-card"><div class="stat-num" id="statPct">0%</div><div class="stat-label">Consistency</div></div>
+    </div>
+    <div class="month-header" id="monthDayHeaders"></div>
+    <div class="monthly-grid" id="monthlyGrid"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+      <span style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(249,160,140,0.25);display:inline-block;"></span>AM only</span>
+      <span style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:rgba(200,122,176,0.2);display:inline-block;"></span>PM only</span>
+      <span style="font-size:10px;color:var(--text2);display:flex;align-items:center;gap:5px;"><span style="width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,var(--mint),var(--mint2));display:inline-block;"></span>Both ✨</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ WEEKLY SCHEDULE TAB -->
+<div id="tab-weekly" class="tab-content">
+  <div class="section">
+    <div class="section-title">Weekly Schedule</div>
+    <div class="section-sub">Weekdays = protect & maintain · Weekends = treat & transform</div>
+
+    <div class="warn-box" style="margin-bottom:12px;">⏱️ <strong>Weekdays (Mon–Thu):</strong> 4-step quickie only — cleanse, essence, moisturize, SPF. Consistency beats perfection!<br><br>⭐ <strong>Friday PM onwards:</strong> Full luxury routine kicks in — BHA Friday, Retinal Saturday, Retinol Sunday.</div>
+
+    <table class="week-table">
+      <thead><tr><th>Day</th><th>PM Routine</th><th>Product</th></tr></thead>
+      <tbody>
+        <tr><td><span class="day-badge">Mon–Thu</span></td><td><span class="active-badge rest">Quick 4-step</span></td><td>Oil cleanse → Water cleanse → Snail Mucin → Moisturize</td></tr>
+        <tr><td><span class="day-badge">Fri</span></td><td><span class="active-badge bha">BHA</span></td><td>Pore Zero BHA Serum — clears pores after the week</td></tr>
+        <tr><td><span class="day-badge">Sat</span></td><td><span class="active-badge retinal">Retinal ⭐</span></td><td>Murad Retinal Resculpt Overnight + Eye Treatment on 11 line</td></tr>
+        <tr><td><span class="day-badge">Sun</span></td><td><span class="active-badge retinol">Retinol ⭐</span></td><td>Nue Skin Filter Serum 1% Retinol + Peptide eye treatment</td></tr>
+      </tbody>
+    </table>
+
+    <div class="section-title" style="margin:14px 0 10px;">💆 11 Line Protocol</div>
+    <div class="mask-card"><div class="mask-emoji">⭐</div><div><div class="mask-name">Saturday — Retinal Night</div><div class="mask-when">Apply Murad Retinal Resculpt Eye Treatment on AND between brows</div><div class="mask-purpose">Retinal is your strongest anti-aging weapon — apply directly to the 11 line area with ring finger, pressing gently</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">⭐</div><div><div class="mask-name">Sunday — Retinol Night</div><div class="mask-when">Apply Sonäge A-Eye Peptide Serum + Dr. Lara Devgan Peptide Eye Cream on 11 line</div><div class="mask-purpose">Peptides reinforce retinal from Saturday — this back-to-back weekend approach is very effective for expression lines</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">💆</div><div><div class="mask-name">Every Weekend Morning (Sat + Sun)</div><div class="mask-when">After essence, press Medicube Triple Collagen Serum into 11 line</div><div class="mask-purpose">Collagen + peptides from both sides (AM + PM) gives maximum results</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">🕶️</div><div><div class="mask-name">Daily Habit</div><div class="mask-when">Wear sunglasses outdoors</div><div class="mask-purpose">Squinting deepens the 11 line — sunglasses are genuinely one of the best preventative measures</div></div></div>
+
+    <div class="section-title" style="margin:14px 0 10px;">Weekend Masks</div>
+    <div class="mask-card"><div class="mask-emoji">🍑</div><div><div class="mask-name">Byroe Peach Kombucha Tea Purifying Clay Mask</div><div class="mask-when">Saturday before PM routine</div><div class="mask-purpose">Deep pore cleanse after the whole week — rinse off, then continue routine</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">💧</div><div><div class="mask-name">Clark's Deep Moisture Mask</div><div class="mask-when">Sunday as sleeping mask</div><div class="mask-purpose">Weekend recovery + deep hydration — apply as last step</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">🍉</div><div><div class="mask-name">Glow Recipe Watermelon AHA Night Treatment</div><div class="mask-when">Alternate Saturdays (swap with retinal)</div><div class="mask-purpose">Brightening + resurfacing — use instead of retinal every other week</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">🫧</div><div><div class="mask-name">Sheet Masks</div><div class="mask-when">Saturday or Sunday afternoon</div><div class="mask-purpose">Apply after toning, before PM routine. Pat in excess — don't rinse. Great skin prep before your actives!</div></div></div>
+    <div class="mask-card"><div class="mask-emoji">👁️</div><div><div class="mask-name">Under Eye Patches / Strips</div><div class="mask-when">Weekend mornings — before eye cream</div><div class="mask-purpose">Great for depuffing before your weekend full AM routine. Apply first, then continue with steps.</div></div></div>
+
+    <div class="warn-box" style="margin-top:12px;">🧼 <strong>Physical Scrubs:</strong> Saturday only — after clay mask, before PM routine. Never on retinal/retinol nights.<br><br>Options: Fenty Skin Cherry Dub Scrub or Vit C Papaya Enzyme Scrub</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════ TIPS TAB -->
+<div id="tab-tips" class="tab-content">
+  <div class="section">
+    <div class="section-title">Key Rules & Tips</div>
+    <div class="section-sub">Avoid conflicts, maximize results</div>
+    <div class="tip-card"><div class="tip-title">⏱️ Your New Routine Philosophy</div><div class="tip-text">Weekdays = 4 steps only (cleanse, essence, moisturize, SPF). Weekends = full luxury treatment. A simple routine you actually do beats a perfect one you skip!</div></div>
+    <div class="tip-card"><div class="tip-title">⭐ Retinal Saturday + Retinol Sunday</div><div class="tip-text">This back-to-back weekend power duo is your secret weapon for the 11 line. Retinal (Saturday) is stronger — it converts to retinoic acid faster. Retinol (Sunday) reinforces the effect. Never swap the order or use both on the same night.</div></div>
+    <div class="tip-card"><div class="tip-title">💆 Targeting Your 11 Line</div><div class="tip-text">Apply your retinal eye treatment and peptide serums directly between the brows — not just under the eyes. Use your ring finger and press gently rather than rubbing. Consistency every weekend will show results in 6–8 weeks.</div></div>
+    <div class="tip-card"><div class="tip-title">🛢️ Double Cleanse Rule</div><div class="tip-text">Never use two oil cleansers back to back. Medicube Oil Cleanser and Feel Daily Hemo Oil are both first-cleanse options — alternate them. Always follow with a water-based second cleanse.</div></div>
+    <div class="tip-card"><div class="tip-title">☀️ SPF Every Single Day</div><div class="tip-text">Even on your 5-minute weekday routine — SPF is the one step that cannot be skipped. It prevents the 11 line from deepening and protects all your weekend active work.</div></div>
+    <div class="tip-card"><div class="tip-title">💧 Oils Always Go Last</div><div class="tip-text">Olehenriksen Hydrabarrier and Byroe Peony Tea Oil are always the very last step on weekend nights — they seal everything in. Never apply oil before your actives or moisturizer.</div></div>
+    <div class="tip-card"><div class="tip-title">⚠️ Never Mix Actives</div><div class="tip-text">BHA (Fri), Retinal (Sat), Retinol (Sun) each get their own night. Never combine them. If your skin feels irritated, drop back to just retinol on Sunday and give retinal every other Saturday.</div></div>
+    <div class="tip-card"><div class="tip-title">🧴 Benched Products — Rotate In</div><div class="tip-text">Great products waiting their turn: AHA serums (Lactic Acid, Glycolic Acid, Saturday Skin), Azelaic Acid, extra toners and serums. Rotate these in on weekends when you want to switch things up.</div></div>
+  </div>
+</div>
+
+<div class="footer">✦ PERSONALIZED SKINCARE RITUAL by Sharisse Lo-A-Njoe ✦</div>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────────
+const KEY='skinRitualV2';
+let S={log:{},currentWeekOffset:0};
+function loadS(){const d=localStorage.getItem(KEY);if(d){try{S=JSON.parse(d);}catch(e){S={log:{},currentWeekOffset:0};}}}
+function saveS(){localStorage.setItem(KEY,JSON.stringify(S));}
+
+const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+const SHORT=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+// ─── ROUTINE DATA ─────────────────────────────────────────────────────────────
+// WEEKDAY = Mon-Fri (5 min) | WEEKEND = Sat-Sun (full luxury)
+const WEEKDAY_AM={
+  1:{title:'Cleanse',products:[{name:'Fresh Soy Face Cleanser',note:'Quick + gentle — 60 seconds'}]},
+  2:{title:'Essence',products:[{name:'COSRX Advanced Snail 96 Mucin Power Essence',note:'Pat in fast — hydration base'}]},
+  3:{title:'Moisturize',products:[{name:'Tatcha Dewy Milk Moisturizer',note:'Richer option'},{name:'Byroe Kale Hydrating Gel Moisturizer',note:'Lighter option'}]},
+  4:{title:'SPF ☀️',products:[{name:'Supergoop Unseen Sunscreen SPF 40',note:'Under makeup — non-negotiable'},{name:'CeraVe Facial Moisturizing Lotion SPF 50',note:'More moisture'},{name:'Fenty Skin Hydra Vizor Mineral SPF 30',note:'Lightest option'}]},
+};
+const WEEKEND_AM_SAT={
+  1:{title:'Cleanse',products:[{name:'Origins Checks & Balances Frothy Face Wash',note:'Balancing Saturday cleanse'},{name:'BareMinerals Skinlongevity Cushion Cloud Foaming Cleanser',note:'Alternate'}]},
+  2:{title:'Tone',products:[{name:'Murad Essential-C Toner',note:'Brightening'},{name:'Medicube Triple Collagen Toner',note:'Collagen boost'}]},
+  3:{title:'Essence',products:[{name:'COSRX Advanced Snail 96 Mucin Power Essence',note:'Hydration base'},{name:'Centella Hyalu-Cica First Ampoule',note:'Soothing option'}]},
+  4:{title:'Serum',products:[{name:'Ascorbic Acid 8% + Alpha Arbutin 2%',note:'Dark spots + brightening'},{name:'Medicube Triple Collagen Serum',note:'Collagen boost option'}]},
+  5:{title:'Eye Cream',products:[{name:'Drunk Elephant C-Tango Multivitamin Eye Cream',note:'Weekend treat'},{name:'Goldfaden MD Energetic Eye Cream',note:'Brightening'}]},
+  6:{title:'11 Line Treatment 💆',products:[{name:'Medicube Triple Collagen Serum',note:'Press gently into 11 line with ring finger'}]},
+  7:{title:'Moisturize',products:[{name:'Tatcha Dewy Milk Moisturizer',note:'Weekend richness'}]},
+  8:{title:'SPF ☀️',products:[{name:'CeraVe Facial Moisturizing Lotion SPF 50',note:'Full coverage'},{name:'Supergoop Unseen Sunscreen SPF 40',note:'Under makeup'}]},
+};
+const WEEKEND_AM_SUN={
+  1:{title:'Cleanse',products:[{name:'Origins Checks & Balances Frothy Face Wash',note:'Sunday reset'},{name:'BareMinerals Skinlongevity Cushion Cloud Foaming Cleanser',note:'Alternate'}]},
+  2:{title:'Tone',products:[{name:'Dew of the Gods Ultra Tonic Watermelon Extract Toner',note:'Hydrating'},{name:'Murad Essential-C Toner',note:'Brightening option'}]},
+  3:{title:'Essence',products:[{name:'COSRX Advanced Snail 96 Mucin Power Essence',note:'Hydration base'},{name:'Centella Hyalu-Cica First Ampoule',note:'Soothing'}]},
+  4:{title:'Serum',products:[{name:'Olehenriksen Truth Serum (Vit C)',note:'Sunday brightening'},{name:'Tula Probiotics Triple-Hydra Complex Serum',note:'Hydration option'}]},
+  5:{title:'Eye Cream',products:[{name:'Drunk Elephant C-Tango Multivitamin Eye Cream',note:'Weekend treat'},{name:'Fenty Skin Flash Nap Instant Revival Eye Gel-Cream',note:'Depuffing option'}]},
+  6:{title:'11 Line Treatment 💆',products:[{name:'Medicube Triple Collagen Serum',note:'Press gently into 11 line with ring finger'}]},
+  7:{title:'Moisturize',products:[{name:'Tatcha Dewy Milk Moisturizer',note:'Sunday richness'}]},
+  8:{title:'SPF ☀️',products:[{name:'Fenty Skin Hydra Vizor Mineral SPF 30',note:'Light Sunday SPF'},{name:'First Aid Beauty Hydrating Sunscreen Milk',note:'Hydrating option'}]},
+};
+const AM={
+  Monday:WEEKDAY_AM, Tuesday:WEEKDAY_AM, Wednesday:WEEKDAY_AM,
+  Thursday:WEEKDAY_AM, Friday:WEEKDAY_AM,
+  Saturday:WEEKEND_AM_SAT, Sunday:WEEKEND_AM_SUN
+};
+
+const WEEKDAY_PM={
+  1:{title:'Double Cleanse — Oil',products:[{name:'Medicube Zero Pore Blackhead Deep Cleansing Oil',note:'Daily go-to'},{name:'Feel Daily Hemo Oil Facial Cleanser',note:'Alternate option'}]},
+  2:{title:'Double Cleanse — Water',products:[{name:'Fresh Soy Face Cleanser',note:'Quick second cleanse'},{name:'Olivia Umma Glass Skin Cleansing Foam',note:'Alternate'}]},
+  3:{title:'Essence',products:[{name:'COSRX Advanced Snail 96 Mucin Power Essence',note:'Every night — safe with everything'}]},
+  4:{title:'Moisturize',products:[{name:'La Roche-Posay Hydraphase Rich',note:'Barrier repair + hydration'},{name:'Tatcha Dewy Milk Moisturizer',note:'Alternative'}]},
+};
+const WEEKEND_PM_FRI={
+  1:{title:'Double Cleanse — Oil',products:[{name:'Medicube Zero Pore Blackhead Deep Cleansing Oil',note:'Daily go-to'},{name:'Feel Daily Hemo Oil Facial Cleanser',note:'Alternate option'}]},
+  2:{title:'Double Cleanse — Water',products:[{name:'Olivia Umma Glass Skin Cleansing Foam',note:''},{name:'Rodial Vit C Brightening Cleanser',note:'Brightening option'},{name:'Fresh Soy Face Cleanser',note:''}]},
+  3:{title:'Tone',products:[{name:'Dermalactives Purifying Apple Cider Toning Mist',note:'Pore purifying after the week'}]},
+  4:{title:'Active Treatment ⚠️',products:[{name:'Pore Zero BHA Serum',note:'BHA — clears pores after the week'},{name:'The Ordinary Salicylic Acid 2%',note:'Alternative BHA'}],warn:'BHA night — do not combine with AHA, retinol, or azelaic acid'},
+  5:{title:'Essence',products:[{name:'COSRX Advanced Snail 96 Mucin Power Essence',note:'Every night'}]},
+  6:{title:'Eye Treatment',products:[{name:'Sonäge A-Eye Peptide Serum',note:'Peptides for 11 line area too'},{name:'Dr. Lara Devgan Peptide Eye Cream',note:'Alternative'}]},
+  7:{title:'Moisturize',products:[{name:'La Roche-Posay Hydraphase Rich',note:'BHA night — barrier repair'}]},
+};
+const WEEKEND_PM_SAT={
+  1:{title:'Double Cleanse — Oil',products:[{name:'Medicube Zero Pore Blackhead Deep Cleansing Oil',note:'Daily go-to'},{name:'Feel Daily Hemo Oil Facial Cleanser',note:'Alternate option'}]},
+  2:{title:'Double Cleanse — Water',products:[{name:'Olivia Umma Glass Skin Cleansing Foam',note:''},{name:'Rodial Vit C Brightening Cleanser',note:'Brightening option'},{name:'Fenty Skin Pre-Show Glow 10% AHA Treatment',note:'⚠️ If using this — skip Step 4 active tonight, it IS your AHA'}]},
+  3:{title:'Tone',products:[{name:'Dermalactives Purifying Apple Cider Toning Mist',note:'Pore purifying'}]},
+  4:{title:'Active Treatment ⚠️ — RETINAL NIGHT',products:[{name:'Murad Retinal Resculpt Overnight Treatment',note:'⭐ Strongest anti-aging — 11 line focus'}],warn:'Retinal night — do not combine with AHA, BHA, or azelaic acid'},
+  5:{title:'Essence',products:[{name:'COSRX Snail 96 Mucin Power Essence',note:'Every night'},{name:'Pro-Collagen Future Restore Serum',note:'Collagen support'}]},
+  6:{title:'11 Line Eye Treatment 💆',products:[{name:'Murad Retinal Resculpt Eye Treatment',note:'Apply on + around 11 line between brows'},{name:'Sonäge A-Eye Peptide Serum',note:'Layer over for extra peptides'}]},
+  7:{title:'Moisturize',products:[{name:'Tatcha Indigo Overnight Repair',note:'Retinal night — soothing + calming'}]},
+  8:{title:'Face Oil',products:[{name:'Olehenriksen Hydrabarrier Nourishing Face Oil',note:'Always last — seals everything in'},{name:'Byroe Teatime Peony Tea Glow Oil',note:'Alternative'}]},
+};
+const WEEKEND_PM_SUN={
+  1:{title:'Double Cleanse — Oil',products:[{name:'Medicube Zero Pore Blackhead Deep Cleansing Oil',note:'Daily go-to'},{name:'Feel Daily Hemo Oil Facial Cleanser',note:'Alternate option'}]},
+  2:{title:'Double Cleanse — Water',products:[{name:'Fresh Soy Face Cleanser',note:''},{name:'Olivia Umma Glass Skin Cleansing Foam',note:''},{name:'Fenty Skin Pre-Show Glow 10% AHA Treatment',note:'⚠️ If using this — skip retinol serum tonight, use max 2× per week on non-consecutive days'}]},
+  3:{title:'Tone',products:[{name:'Medicube Triple Collagen Toner',note:'Hydration + collagen Sunday'},{name:'Fenty Skin Fat Water',note:'Light option'}]},
+  4:{title:'Active Treatment ⚠️ — RETINOL NIGHT',products:[{name:'Nue Skin Filter Serum 1% Retinol',note:'⭐ Reinforces Saturday retinal — 11 line'}],warn:'Retinol night — do not combine with AHA, BHA, or azelaic acid'},
+  5:{title:'Essence',products:[{name:'COSRX Snail 96 Mucin Power Essence',note:'Every night'},{name:'Pro-Collagen Future Restore Serum',note:'Collagen support'}]},
+  6:{title:'11 Line Eye Treatment 💆',products:[{name:'Sonäge A-Eye Peptide Serum',note:'Apply on + around 11 line between brows'},{name:'Dr. Lara Devgan Peptide Eye Cream',note:'Layer for extra peptides'},{name:'Glow Recipe Avocado Melt Retinol Eye Cream',note:'Retinol night compatible'}]},
+  7:{title:'Moisturize',products:[{name:'Tatcha Indigo Overnight Repair',note:'Retinol night — soothing'},{name:'Inn Beauty Project 10+10 Moisturizer',note:'Alternative'}]},
+  8:{title:'Face Oil',products:[{name:'Olehenriksen Hydrabarrier Nourishing Face Oil',note:'Always last — seals everything in'},{name:'Byroe Teatime Peony Tea Glow Oil',note:'Alternative'}]},
+};
+const PM={
+  Monday:WEEKDAY_PM, Tuesday:WEEKDAY_PM, Wednesday:WEEKDAY_PM,
+  Thursday:WEEKDAY_PM, Friday:WEEKEND_PM_FRI,
+  Saturday:WEEKEND_PM_SAT, Sunday:WEEKEND_PM_SUN
+};
+
+
+// ─── CURRENT SELECTED DAY ─────────────────────────────────────────────────────
+let selectedAmDay=DAYS[new Date().getDay()===0?6:new Date().getDay()-1];
+let selectedPmDay=DAYS[new Date().getDay()===0?6:new Date().getDay()-1];
+
+// ─── DAY SELECTORS ────────────────────────────────────────────────────────────
+function buildDaySelectors(){
+  ['am','pm'].forEach(mode=>{
+    const el=document.getElementById(mode+'-day-selector');
+    el.innerHTML='';
+    DAYS.forEach(day=>{
+      const btn=document.createElement('button');
+      btn.className='day-pill';
+      btn.textContent=day.substring(0,3);
+      btn.dataset.day=day;
+      const todayKey=todayDateKey();
+      const weekStart=getWeekStart(new Date());
+      const dayDate=new Date(weekStart);
+      dayDate.setDate(weekStart.getDate()+DAYS.indexOf(day));
+      const dk=dateKey(dayDate);
+      const log=S.log[dk]||{};
+      if(log.am&&log.pm) btn.classList.add('done-both');
+      else if(log.am&&mode==='am') btn.classList.add('done-am');
+      else if(log.pm&&mode==='pm') btn.classList.add('done-pm');
+      if((mode==='am'&&day===selectedAmDay)||(mode==='pm'&&day===selectedPmDay)) btn.classList.add('active');
+      btn.onclick=()=>{
+        document.querySelectorAll('#'+mode+'-day-selector .day-pill').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        if(mode==='am'){selectedAmDay=day;renderAmRoutine();}
+        else{selectedPmDay=day;renderPmRoutine();}
+      };
+      el.appendChild(btn);
+    });
+  });
+}
+
+// ─── RENDER ROUTINES ─────────────────────────────────────────────────────────
+function renderAmRoutine(){
+  const day=selectedAmDay;
+  const steps=AM[day];
+  const weekStart=getWeekStart(new Date());
+  const dayDate=new Date(weekStart);
+  dayDate.setDate(weekStart.getDate()+DAYS.indexOf(day));
+  const dk=dateKey(dayDate);
+  const log=S.log[dk]||{};
+  const amDone=log.am||false;
+
+  let html=`<div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--deep);margin-bottom:12px;">${day} <em>Morning</em> ☀️</div>`;
+  Object.keys(steps).sort((a,b)=>a-b).forEach(stepNum=>{
+    const step=steps[stepNum];
+    const isOpen=step.products.length>1;
+    html+=`<div class="routine-card" id="am-step-${stepNum}">
+      <div class="routine-header" onclick="toggleCard(this)">
+        <div class="step-num">${stepNum}</div>
+        <div class="step-title">${step.title}</div>
+        <div class="step-expand">⌄</div>
+      </div>
+      <div class="routine-body">`;
+    if(step.products.length>1) html+=`<div class="rotate-label">Pick one — or use as backup</div>`;
+    step.products.forEach((prod,pi)=>{
+      const checkId=`am_${dk}_${stepNum}_${pi}`;
+      const checked=(log.checks||{})[checkId]||false;
+      html+=`<div class="product-option">
+        <button class="prod-check${checked?' checked':''}" onclick="toggleCheck('${checkId}','${dk}')">${checked?'✓':''}</button>
+        <div class="prod-info">
+          <div class="prod-name">${prod.name}</div>
+          ${prod.note?`<div class="prod-note">${prod.note}</div>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  html+=`<div class="done-btn-wrap" style="padding:0;margin-top:8px;">
+    <button class="done-btn am-btn${amDone?' marked':''}" onclick="markDone('${dk}','am')">
+      ${amDone?'✓ Morning Routine Done!':'Mark Morning Routine Done ☀️'}
+    </button>
+  </div>`;
+  document.getElementById('am-routine-content').innerHTML=html;
+}
+
+function renderPmRoutine(){
+  const day=selectedPmDay;
+  const steps=PM[day];
+  const weekStart=getWeekStart(new Date());
+  const dayDate=new Date(weekStart);
+  dayDate.setDate(weekStart.getDate()+DAYS.indexOf(day));
+  const dk=dateKey(dayDate);
+  const log=S.log[dk]||{};
+  const pmDone=log.pm||false;
+
+  let html=`<div style="font-family:'Cormorant Garamond',serif;font-size:18px;color:var(--deep);margin-bottom:12px;">${day} <em>Evening</em> 🌙</div>`;
+  Object.keys(steps).sort((a,b)=>a-b).forEach(stepNum=>{
+    const step=steps[stepNum];
+    html+=`<div class="routine-card night-mode" id="pm-step-${stepNum}">
+      <div class="routine-header" onclick="toggleCard(this)">
+        <div class="step-num">${stepNum}</div>
+        <div class="step-title">${step.title}</div>
+        <div class="step-expand">⌄</div>
+      </div>
+      <div class="routine-body">`;
+    if(step.warn) html+=`<div class="warn-box">⚠️ <strong>Warning:</strong> ${step.warn}</div>`;
+    if(step.products.length>1) html+=`<div class="rotate-label">Pick one — or use as backup</div>`;
+    step.products.forEach((prod,pi)=>{
+      const checkId=`pm_${dk}_${stepNum}_${pi}`;
+      const checked=(log.checks||{})[checkId]||false;
+      html+=`<div class="product-option">
+        <button class="prod-check${checked?' checked':''}" onclick="toggleCheck('${checkId}','${dk}')">${checked?'✓':''}</button>
+        <div class="prod-info">
+          <div class="prod-name">${prod.name}</div>
+          ${prod.note?`<div class="prod-note">${prod.note}</div>`:''}
+        </div>
+      </div>`;
+    });
+    html+=`</div></div>`;
+  });
+  html+=`<div class="done-btn-wrap" style="padding:0;margin-top:8px;">
+    <button class="done-btn pm-btn${pmDone?' marked':''}" onclick="markDone('${dk}','pm')">
+      ${pmDone?'✓ Evening Routine Done!':'Mark Evening Routine Done 🌙'}
+    </button>
+  </div>`;
+  document.getElementById('pm-routine-content').innerHTML=html;
+}
+
+function toggleCard(header){
+  const card=header.closest('.routine-card');
+  card.classList.toggle('open');
+  header.classList.toggle('open');
+}
+
+// ─── CHECK / MARK ─────────────────────────────────────────────────────────────
+function toggleCheck(checkId,dk){
+  if(!S.log[dk]) S.log[dk]={};
+  if(!S.log[dk].checks) S.log[dk].checks={};
+  S.log[dk].checks[checkId]=!S.log[dk].checks[checkId];
+  saveS();
+  // re-render current view
+  if(checkId.startsWith('am_')) renderAmRoutine();
+  else renderPmRoutine();
+}
+
+function markDone(dk,mode){
+  if(!S.log[dk]) S.log[dk]={};
+  S.log[dk][mode]=!S.log[dk][mode];
+  saveS();
+  buildDaySelectors();
+  if(mode==='am') renderAmRoutine();
+  else renderPmRoutine();
+  renderTracker();
+  renderOverview();
+}
+
+// ─── DATE HELPERS ─────────────────────────────────────────────────────────────
+function dateKey(d){ return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+function todayDateKey(){ return dateKey(new Date()); }
+function getWeekStart(d,offset=0){
+  const date=new Date(d);
+  date.setDate(date.getDate()+offset*7);
+  const day=date.getDay();
+  const diff=day===0?-6:1-day;
+  date.setDate(date.getDate()+diff);
+  date.setHours(0,0,0,0);
+  return date;
+}
+
+// ─── TRACKER ──────────────────────────────────────────────────────────────────
+function changeWeek(dir){ S.currentWeekOffset=(S.currentWeekOffset||0)+dir; saveS(); renderTracker(); }
+
+function renderTracker(){
+  const offset=S.currentWeekOffset||0;
+  const weekStart=getWeekStart(new Date(),offset);
+  const weekEnd=new Date(weekStart); weekEnd.setDate(weekStart.getDate()+6);
+  document.getElementById('weekLabel').textContent=
+    weekStart.toLocaleDateString('en-US',{month:'short',day:'numeric'})+' – '+weekEnd.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+
+  const grid=document.getElementById('trackerGrid');
+  grid.innerHTML='';
+  let streak=0; let counting=true;
+  // build from today backwards for streak
+  const today=new Date(); today.setHours(0,0,0,0);
+  for(let i=0;i<60;i++){
+    const d=new Date(today); d.setDate(today.getDate()-i);
+    const dk=dateKey(d);
+    const log=S.log[dk]||{};
+    if(log.am&&log.pm) streak++;
+    else { counting=false; break; }
+  }
+  document.getElementById('streakNum').textContent=streak;
+  document.getElementById('streakSub').textContent=streak===0?'Complete both AM & PM to build your streak':streak===1?'Great start! Keep it going 🌸':`${streak} days in a row — you're glowing! ✨`;
+
+  DAYS.forEach((day,i)=>{
+    const d=new Date(weekStart); d.setDate(weekStart.getDate()+i);
+    const dk=dateKey(d);
+    const log=S.log[dk]||{};
+    const isToday=dk===todayDateKey();
+    const col=document.createElement('div');
+    col.className='tracker-day-col';
+    let circleClass='tracker-circle';
+    let circleContent='';
+    if(log.am&&log.pm){circleClass+=' both-done';circleContent='✓';}
+    else if(log.am){circleClass+=' am-done';circleContent='☀️';}
+    else if(log.pm){circleClass+=' pm-done';circleContent='🌙';}
+    col.innerHTML=`
+      <div class="tracker-day-name">${SHORT[i]}</div>
+      <div class="tracker-day-date">${d.getDate()}</div>
+      <div class="${circleClass}${isToday?' today':''}">${circleContent}</div>
+      <div class="tracker-label">${log.am&&log.pm?'Both':log.am?'AM':log.pm?'PM':''}</div>`;
+    grid.appendChild(col);
+  });
+}
+
+// ─── OVERVIEW ─────────────────────────────────────────────────────────────────
+function renderOverview(){
+  const now=new Date();
+  const year=now.getFullYear();
+  const month=now.getMonth();
+  document.getElementById('monthOverviewLabel').textContent=now.toLocaleString('default',{month:'long',year:'numeric'});
+
+  // month day headers
+  const headers=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  document.getElementById('monthDayHeaders').innerHTML=headers.map(h=>`<div class="month-day-header">${h}</div>`).join('');
+
+  // first day of month
+  const firstDay=new Date(year,month,1);
+  const startDow=firstDay.getDay()===0?6:firstDay.getDay()-1; // Mon=0
+  const daysInMonth=new Date(year,month+1,0).getDate();
+
+  let fullDays=0,amOnly=0,pmOnly=0,totalDays=0;
+  let cells='';
+  // empty cells
+  for(let i=0;i<startDow;i++) cells+=`<div class="month-day-cell"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const date=new Date(year,month,d);
+    const dk=dateKey(date);
+    const log=S.log[dk]||{};
+    const isToday=dk===todayDateKey();
+    const isPast=date<=now;
+    let cls='month-day-cell has-date';
+    if(isToday) cls+=' today';
+    if(log.am&&log.pm){cls+=' full-done';if(isPast){fullDays++;totalDays++;}}
+    else if(log.am){cls+=' am-only';if(isPast){amOnly++;totalDays++;}}
+    else if(log.pm){cls+=' pm-only';if(isPast){pmOnly++;totalDays++;}}
+    cells+=`<div class="${cls}" title="${dk}">${d}</div>`;
+  }
+  document.getElementById('monthlyGrid').innerHTML=cells;
+
+  const daysElapsed=now.getDate();
+  const pct=daysElapsed>0?Math.round(((fullDays+amOnly*0.5+pmOnly*0.5)/daysElapsed)*100):0;
+  document.getElementById('statFullDays').textContent=fullDays;
+  document.getElementById('statAmDays').textContent=amOnly;
+  document.getElementById('statPmDays').textContent=pmOnly;
+  document.getElementById('statPct').textContent=pct+'%';
+}
+
+// ─── TAB NAV ──────────────────────────────────────────────────────────────────
+function showTab(name,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='tracker') renderTracker();
+  if(name==='overview') renderOverview();
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+loadS();
+buildDaySelectors();
+renderAmRoutine();
+renderPmRoutine();
+renderTracker();
+renderOverview();
+</script>
+</body>
+</html>
